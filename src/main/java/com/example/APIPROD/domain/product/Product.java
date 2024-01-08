@@ -22,7 +22,7 @@ public class Product {
 
     private String name;
 
-    private Number price_in_cents;
+    private Integer price_in_cents;
 
     public Product(RequestProduct requestProduct){
         this.name = requestProduct.name();
