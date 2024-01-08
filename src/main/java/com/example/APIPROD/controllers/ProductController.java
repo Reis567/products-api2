@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +31,10 @@ public class ProductController {
         Product newProduct = new Product(data);
         repository.save(newProduct);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping
+    public ResponseEntity updateProduct(@RequestBody @Valid RequestProduct data){
+        Product product = repository.getReferenceById(data.id())
     }
 }
