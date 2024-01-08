@@ -1,9 +1,14 @@
 package com.example.APIPROD.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,9 +37,20 @@ public class ProductController {
         repository.save(newProduct);
         return ResponseEntity.ok().build();
     }
-
-    @PutMapping
-    public ResponseEntity updateProduct(@RequestBody @Valid RequestProduct data){
-        Product product = repository.getReferenceById(data.id())
+    @PutMapping("/{id}")
+    public ResponseEntity updateProduct(@PathVariable String id, @RequestBody @Valid RequestProduct data) {
+        Optional<Product> optionalProduct = repository.findById(id);
+    
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    
+        Product product = optionalProduct.get();
+        product.setName(data.name());
+        product.setPrice_in_cents(data.price_in_cents());
+        
+        repository.save(product);
+    
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 }
