@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.APIPROD.domain.product.Product;
 import com.example.APIPROD.domain.product.ProductRepository;
 import com.example.APIPROD.domain.product.RequestProduct;
 
@@ -26,6 +27,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity registerProduct(@RequestBody @Valid RequestProduct data){
+        Product newProduct = new Product(data);
+        repository.save(newProduct);
         return ResponseEntity.ok().build();
     }
 }

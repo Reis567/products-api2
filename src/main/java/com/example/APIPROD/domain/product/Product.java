@@ -23,4 +23,10 @@ public class Product {
     private String name;
 
     private Number price_in_cents;
+
+    public Product(RequestProduct requestProduct){
+        this.name = requestProduct.name();
+        this.price_in_cents = requestProduct.price_in_cents();
+
+    }
 }
