@@ -32,6 +32,18 @@ public class ProductController {
         var allProducts = repository.findAll();
         return ResponseEntity.ok(allProducts);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity getProductById(@PathVariable String id) {
+        Optional<Product> optionalProduct = repository.findById(id);
+
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Product product = optionalProduct.get();
+        return ResponseEntity.status(HttpStatus.OK).body(product);
+}
+
 
     @PostMapping
     public ResponseEntity registerProduct(@RequestBody @Valid RequestProduct data){
