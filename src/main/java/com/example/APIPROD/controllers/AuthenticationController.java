@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.APIPROD.domain.user.AuthenticationDTO;
+import com.example.APIPROD.domain.user.LoginResponseDTO;
 import com.example.APIPROD.domain.user.RegisterDTO;
 import com.example.APIPROD.domain.user.User;
 import com.example.APIPROD.domain.user.UserRepository;
@@ -35,8 +36,8 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User)auth.getPrincipal());
-        
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDTO(token));
 
     }
 
