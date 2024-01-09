@@ -15,6 +15,7 @@ import com.example.APIPROD.domain.user.AuthenticationDTO;
 import com.example.APIPROD.domain.user.RegisterDTO;
 import com.example.APIPROD.domain.user.User;
 import com.example.APIPROD.domain.user.UserRepository;
+import com.example.APIPROD.infra.security.TokenService;
 
 import jakarta.validation.Valid;
 
@@ -25,24 +26,36 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
+
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
+        var token = tokenService.generateToken((User)auth.getPrincipal());
+        
         return ResponseEntity.status(HttpStatus.OK).build();
+
     }
+
+
     @PostMapping("/register")
     public ResponseEntity register (@RequestBody @Valid RegisterDTO data){
+
         if(this.repository.findByLogin(data.login())!= null) {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User newUser = new User(data.login() , encryptedPassword, data.role());
 
         this.repository.save(newUser);
 
         return ResponseEntity.status(HttpStatus.OK).build();
+
     }
+
 }
